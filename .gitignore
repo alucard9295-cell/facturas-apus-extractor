@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+apu.db
+*.sqlite
+*.sqlite3
+chroma_db/
+reportes/
+facturas/
+*.pdf
+*.zip
+*.xml
+.streamlit/

@@ -1,0 +1,11 @@
+streamlit>=1.35
+PyMuPDF>=1.24
+Pillow>=10
+transformers==4.46.3
+tokenizers==0.20.3
+accelerate>=1.0
+addict>=2.4
+matplotlib>=3.8
+einops>=0.8
+easydict>=1.13
+img2pdf>=0.6
