@@ -65,7 +65,8 @@ def main():
     with tempfile.TemporaryDirectory(prefix="deepseek-ocr-") as temporary:
         image_paths = pdf_pages(uploaded.getvalue(), Path(temporary))[: int(max_pages)]
         try:
-            tokenizer, model = load_model()
+            with st.spinner("Descargando/cargando DeepSeek-OCR en la GPU. La primera vez puede tardar varios minutos..."):
+                tokenizer, model = load_model()
             for index, image_path in enumerate(image_paths, start=1):
                 st.subheader(f"Página {index}")
                 st.image(Image.open(image_path), use_container_width=True)
