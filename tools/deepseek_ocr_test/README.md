@@ -29,3 +29,11 @@ uv run --python .venv/Scripts/python.exe streamlit run app.py
 La primera ejecucion descarga el modelo `deepseek-ai/DeepSeek-OCR` desde
 Hugging Face. El resultado es Markdown por pagina y debe revisarse antes de
 convertirlo a JSON financiero.
+
+## Memoria de Windows
+
+La RTX 4060 Ti tiene 16 GB de VRAM, pero la carga inicial tambien necesita RAM
+y memoria virtual. Si aparece el error de Windows 1455, aumenta el archivo de
+paginacion: Configuracion avanzada del sistema > Rendimiento > Opciones
+avanzadas > Memoria virtual. Usa un tamano inicial de 32768 MB y maximo de
+65536 MB, aplica el cambio y reinicia Windows.

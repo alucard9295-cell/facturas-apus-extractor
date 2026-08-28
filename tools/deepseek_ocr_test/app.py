@@ -22,6 +22,9 @@ def load_model():
             MODEL_NAME,
             trust_remote_code=True,
             use_safetensors=True,
+            torch_dtype=torch.bfloat16,
+            low_cpu_mem_usage=True,
+            device_map="auto",
             _attn_implementation="flash_attention_2",
         )
     except (ImportError, ValueError):
@@ -29,9 +32,12 @@ def load_model():
             MODEL_NAME,
             trust_remote_code=True,
             use_safetensors=True,
+            torch_dtype=torch.bfloat16,
+            low_cpu_mem_usage=True,
+            device_map="auto",
             _attn_implementation="eager",
         )
-    return tokenizer, model.eval().cuda().to(torch.bfloat16)
+    return tokenizer, model.eval()
 
 
 def pdf_pages(pdf_bytes: bytes, output_dir: Path) -> list[Path]:
@@ -124,6 +130,11 @@ def main():
                     st.download_button("Descargar JSON de esta página", json.dumps(parsed if parsed is not None else {"raw": raw_result}, ensure_ascii=False, indent=2), file_name=f"{Path(uploaded.name).stem}-pagina-{index}.json", mime="application/json", key=f"download-{index}")
             if output_mode == "JSON de factura" and outputs:
                 st.download_button("Descargar todas las salidas JSON", json.dumps([parse_json_output(item) or {"raw": item} for item in outputs], ensure_ascii=False, indent=2), file_name=f"{Path(uploaded.name).stem}-ocr.json", mime="application/json", key="download-all")
+        except OSError as error:
+            if "1455" in str(error):
+                st.error("Windows se quedo sin memoria virtual al cargar el modelo. Amplia el archivo de paginacion y cierra otras aplicaciones.")
+            else:
+                st.exception(error)
         except Exception as error:
             st.exception(error)
 
