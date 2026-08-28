@@ -124,7 +124,7 @@ def main():
                 else:
                     parsed = parse_json_output(raw_result)
                     if parsed is None:
-                    st.warning("El modelo no devolvió JSON válido. Se muestra la salida original.")
+                        st.warning("El modelo no devolvió JSON válido. Se muestra la salida original.")
                         st.code(raw_result or "Sin salida de texto. Revisa la consola de Streamlit para ver el detalle.", language="text")
                     else:
                         st.json(parsed)
