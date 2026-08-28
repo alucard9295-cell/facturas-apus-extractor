@@ -104,7 +104,7 @@ def main():
                 st.subheader(f"Página {index}")
                 st.image(Image.open(image_path), use_container_width=True)
                 with st.spinner("Ejecutando OCR..."):
-                    prompt = "<image>\\n<|grounding|>Convert the document to markdown." if output_mode == "Markdown" else "<image>\\nReturn ONLY valid JSON with this schema: {proveedor_nombre, numero_factura, fecha_factura, subtotal, iva, total_pagar, items:[{descripcion_cruda, cantidad, valor_unitario, valor_total}]}. Use null when unknown. Do not add markdown or explanations."
+                    prompt = "<image>\n<|grounding|>Convert the document to markdown." if output_mode == "Markdown" else "<image>\nReturn ONLY valid JSON with this schema: {proveedor_nombre, numero_factura, fecha_factura, subtotal, iva, total_pagar, items:[{descripcion_cruda, cantidad, valor_unitario, valor_total}]}. Use null when unknown. Do not add markdown or explanations."
                     result = model.infer(
                         tokenizer,
                         prompt=prompt,
@@ -124,8 +124,8 @@ def main():
                 else:
                     parsed = parse_json_output(raw_result)
                     if parsed is None:
-                        st.warning("El modelo no devolvió JSON válido. Se muestra la salida original.")
-                        st.code(raw_result or "Sin salida de texto", language="text")
+                    st.warning("El modelo no devolvió JSON válido. Se muestra la salida original.")
+                        st.code(raw_result or "Sin salida de texto. Revisa la consola de Streamlit para ver el detalle.", language="text")
                     else:
                         st.json(parsed)
                     st.download_button("Descargar JSON de esta página", json.dumps(parsed if parsed is not None else {"raw": raw_result}, ensure_ascii=False, indent=2), file_name=f"{Path(uploaded.name).stem}-pagina-{index}.json", mime="application/json", key=f"download-{index}")
