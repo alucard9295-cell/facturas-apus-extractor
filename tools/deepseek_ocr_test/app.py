@@ -113,8 +113,8 @@ def main():
                         base_size=1024,
                         image_size=640,
                         crop_mode=True,
-                        save_results=True,
-                        test_compress=True,
+                        save_results=False,
+                        test_compress=False,
                     )
                 raw_result = result_text(result, Path(temporary), image_path)
                 outputs.append(raw_result)
