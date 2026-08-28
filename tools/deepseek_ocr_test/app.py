@@ -58,6 +58,19 @@ def parse_json_output(raw: str) -> dict | list | None:
         return None
 
 
+def result_text(result, output_dir: Path, image_path: Path) -> str:
+    if isinstance(result, str) and result.strip():
+        return result
+    candidates = sorted(
+        path for path in output_dir.rglob("*")
+        if path.is_file() and path.suffix.lower() in {".md", ".txt"}
+        and path != image_path
+    )
+    if candidates:
+        return candidates[-1].read_text(encoding="utf-8", errors="replace")
+    return ""
+
+
 def main():
     st.set_page_config(page_title="DeepSeek-OCR prueba", layout="wide")
     st.title("Prueba local de DeepSeek-OCR")
@@ -94,18 +107,18 @@ def main():
                         base_size=1024,
                         image_size=640,
                         crop_mode=True,
-                        save_results=False,
+                        save_results=True,
                         test_compress=True,
                     )
-                raw_result = result if isinstance(result, str) else str(result)
+                raw_result = result_text(result, Path(temporary), image_path)
                 outputs.append(raw_result)
                 if output_mode == "Markdown":
-                    st.markdown(raw_result)
+                    st.markdown(raw_result or "El modelo no genero un archivo de salida.")
                 else:
                     parsed = parse_json_output(raw_result)
                     if parsed is None:
                         st.warning("El modelo no devolvió JSON válido. Se muestra la salida original.")
-                        st.code(raw_result, language="text")
+                        st.code(raw_result or "Sin salida de texto", language="text")
                     else:
                         st.json(parsed)
                     st.download_button("Descargar JSON de esta página", json.dumps(parsed if parsed is not None else {"raw": raw_result}, ensure_ascii=False, indent=2), file_name=f"{Path(uploaded.name).stem}-pagina-{index}.json", mime="application/json", key=f"download-{index}")
